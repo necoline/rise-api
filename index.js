@@ -38,15 +38,22 @@ server.route({
   handler: StudentController.remove
 });
 
+
+
 (async () => {
   try {  
     await server.start();
-    // Once started, connect to Mongo through Mongoose
     mongoose.connect(MongoDBUrl, {}).then(() => { console.log(`Connected to Mongo server`) }, err => { console.log(err) });
     console.log(`Server running at: ${server.info.uri}`);
    
-    
-    mongoClient.connect("mongodb://rise-test-db:EMitrOF1mGljc2JYY84tWhuDzYFdGoQLuVzeAxLjnZw08WMZqmt9ojoJZkGQ0Y7cxg01rW6egiwKCDbb42diKg==@rise-test-db.documents.azure.com:10255/?ssl=true", function (err, db) {
+  
+    mongoose.connect(`mongodb://${data.userName}.documents.azure.com:${data.port}/${data.userName}?ssl=true`, {
+      auth: {
+        user: data.userName,
+        password: data.password
+      }
+    }, function (err, db) {
+    console.log('db', db)
     db.close();
     });
   }
@@ -54,3 +61,16 @@ server.route({
     console.log(err)
   }
 })();
+
+var data = {
+  userName: 'rise-test-db',
+  password: 'EMitrOF1mGljc2JYY84tWhuDzYFdGoQLuVzeAxLjnZw08WMZqmt9ojoJZkGQ0Y7cxg01rW6egiwKCDbb42diKg==',
+  host: 'rise-test-db.documents.azure.com',
+  port: 10255
+}
+// mongoose.connect('mongodb://<cosmosdb-username>.documents.azure.com:10255/<databasename>?ssl=true', {
+//     auth: {
+//       user: '<cosmosdb-username>',
+//       password: '<cosmosdb-password>'
+//     }
+//   })
