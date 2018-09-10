@@ -43,19 +43,33 @@ server.route({
 (async () => {
   try {  
     await server.start();
-    mongoose.connect(MongoDBUrl, {}).then(() => { console.log(`Connected to Mongo server`) }, err => { console.log(err) });
+    // mongoose.connect(MongoDBUrl, {}).then(() => { console.log(`Connected to Mongo server`) }, err => { console.log(err) });
     console.log(`Server running at: ${server.info.uri}`);
-   
-  
-    mongoose.connect(`mongodb://${data.userName}.documents.azure.com:${data.port}/${data.userName}?ssl=true`, {
+    
+    mongoose.connect(`mongodb://${data.userName}.documents.azure.com:${data.port}/${data.userName}?ssl=true&replicaSet=globaldb`, { 
+      useNewUrlParser: true,
       auth: {
-        user: data.userName,
-        password: data.password
-      }
-    }, function (err, db) {
-    console.log('db', db)
-    db.close();
+            user: data.userName,
+            password: data.password
+          } 
     });
+    
+    var db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'connection error:'));
+    db.once('open', function() {
+    console.log("Connected to DB");
+    });
+
+  
+    // mongoose.connect(`mongodb://${data.userName}.documents.azure.com:${data.port}/${data.userName}?ssl=true`, {
+    //   auth: {
+    //     user: data.userName,
+    //     password: data.password
+    //   }
+    // }, function (err, db) {
+    // console.log('db', db)
+    // db.close();
+    // });
   }
   catch (err) {  
     console.log(err)
