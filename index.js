@@ -1,8 +1,12 @@
 const Hapi = require('hapi');
 const mongoose = require('mongoose');
-const mongoClient = require("mongodb").MongoClient;
+require('dotenv').config()
+// const mongoClient = require("mongodb").MongoClient;
 const StudentController =  require('./src/controllers/student');
 const MongoDBUrl = 'mongodb://admin:rise123@ds020208.mlab.com:20208/rise-dev';
+
+const port = process.env.AZURE_PORT || 3000;
+const username = process.env.AZURE_USER_NAME ;
 
 const server = new Hapi.Server({
   port: 3000,
@@ -45,7 +49,8 @@ server.route({
     await server.start();
     // mongoose.connect(MongoDBUrl, {}).then(() => { console.log(`Connected to Mongo server`) }, err => { console.log(err) });
     console.log(`Server running at: ${server.info.uri}`);
-    
+
+    // mongoose.connect(`mongodb://${userName}.documents.azure.com:${port}/${userName}?ssl=true&replicaSet=globaldb`, { 
     mongoose.connect(`mongodb://${data.userName}.documents.azure.com:${data.port}/${data.userName}?ssl=true&replicaSet=globaldb`, { 
       useNewUrlParser: true,
       auth: {
@@ -56,7 +61,7 @@ server.route({
     
     var db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
-    db.once('open', function() {
+    db.once('open', () => {
     console.log("Connected to DB");
     });
 
