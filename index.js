@@ -47,10 +47,8 @@ server.route({
 (async () => {
   try {  
     await server.start();
-    // mongoose.connect(MongoDBUrl, {}).then(() => { console.log(`Connected to Mongo server`) }, err => { console.log(err) });
     console.log(`Server running at: ${server.info.uri}`);
 
-    // mongoose.connect(`mongodb://${userName}.documents.azure.com:${port}/${userName}?ssl=true&replicaSet=globaldb`, { 
     mongoose.connect(`mongodb://${data.userName}.documents.azure.com:${data.port}/${data.userName}?ssl=true&replicaSet=globaldb`, { 
       useNewUrlParser: true,
       auth: {
@@ -65,16 +63,6 @@ server.route({
     console.log("Connected to DB");
     });
 
-  
-    // mongoose.connect(`mongodb://${data.userName}.documents.azure.com:${data.port}/${data.userName}?ssl=true`, {
-    //   auth: {
-    //     user: data.userName,
-    //     password: data.password
-    //   }
-    // }, function (err, db) {
-    // console.log('db', db)
-    // db.close();
-    // });
   }
   catch (err) {  
     console.log(err)
@@ -87,9 +75,3 @@ var data = {
   host: 'rise-test-db.documents.azure.com',
   port: 10255
 }
-// mongoose.connect('mongodb://<cosmosdb-username>.documents.azure.com:10255/<databasename>?ssl=true', {
-//     auth: {
-//       user: '<cosmosdb-username>',
-//       password: '<cosmosdb-password>'
-//     }
-//   })
